@@ -28,7 +28,7 @@ class _GetStartedState extends State<GetStarted> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: Theme.of(context).colorScheme.secondaryVariant),
+                    color: Theme.of(context).colorScheme.secondaryContainer),
               ),
             ),
           ),
