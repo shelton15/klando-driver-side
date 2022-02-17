@@ -44,7 +44,7 @@ class _GetStartedState extends State<GetStarted> {
           Center(
               child: Padding(
             padding: const EdgeInsets.only(top: 100, bottom: 10),
-            child: Image.asset('assets/Car driving-rafiki.png'),
+            child: Image.asset('assets/Cardrivingrafiki.png'),
           )),
           Padding(
             padding: const EdgeInsets.only(top: 80, bottom: 30),

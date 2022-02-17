@@ -18,7 +18,7 @@ class _VerificationState extends State<Verification> {
           child: Column(
             children: [
               Image.asset(
-                'assets/Car driving-bro.png',
+                'assets/Cardrivingbro1.png',
                 width: 240,
               ),
             ],
