@@ -17,10 +17,21 @@ class _VerificationState extends State<Verification> {
           padding: const EdgeInsets.only(top: 50),
           child: Column(
             children: [
-              Image.asset(
-                'assets/Cardrivingbro1.png',
-                width: 240,
+              Center(
+                child: Image.asset(
+                  'assets/Cardrivingbro1.png',
+                  width: 180,
+                ),
               ),
+              Center(
+                child: Text(
+                  'Enter Your Phone Number',
+                   style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    color: Theme.of(context).colorScheme.secondaryContainer),
+                ),
+              )
             ],
           ),
         )));
