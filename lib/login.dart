@@ -14,7 +14,7 @@ class _VerificationState extends State<Verification> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.only(top: 50),
+          padding: const EdgeInsets.only(top: 20),
           child: Column(
             children: [
               Center(
