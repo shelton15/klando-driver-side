@@ -34,7 +34,7 @@ class _GetStartedState extends State<GetStarted> {
           ),
           Center(
             child: Text(
-              'klando klando klando klando klando klando klando',
+              'Your Comfort Is Our Priority',
               style: TextStyle(
                   fontWeight: FontWeight.normal,
                   fontSize: 15,
