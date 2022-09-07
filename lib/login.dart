@@ -46,6 +46,22 @@ class _VerificationState extends State<Verification> {
                     print(phone.completeNumber);
                   },
                 ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50, bottom: 40),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      fixedSize: const Size(200, 100),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: null,
+                  ),
+                ),
               )
             ],
           ),
