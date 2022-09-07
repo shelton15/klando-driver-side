@@ -14,6 +14,7 @@ class LottiScreen extends StatefulWidget {
 class _LottiScreenState extends State<LottiScreen> {
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     Timer(const Duration(seconds: 7), () {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:klando/login.dart';
-import 'package:klando/main.dart';
 
 class GetStarted extends StatefulWidget {
   const GetStarted({Key? key}) : super(key: key);
@@ -50,7 +49,7 @@ class _GetStartedState extends State<GetStarted> {
             padding: const EdgeInsets.only(top: 80, bottom: 30),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                  primary: Colors.green,
+                  backgroundColor: Colors.green,
                   fixedSize: const Size(370, 80),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50))),
