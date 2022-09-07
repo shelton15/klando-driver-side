@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import 'OTPScreen.dart';
+
 class Verification extends StatefulWidget {
   const Verification({Key? key}) : super(key: key);
 
@@ -48,21 +50,27 @@ class _VerificationState extends State<Verification> {
                 ),
               ),
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 50, bottom: 40),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      fixedSize: const Size(200, 100),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50),
-                      ),
+                  child: Padding(
+                padding: const EdgeInsets.only(top: 50, bottom: 40),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    fixedSize: const Size(200, 80),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
                     ),
-                    onPressed: () {},
-                    child: null,
                   ),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => OTPScreen(_controller.text)));
+                  },
+                  child: const Text('Next',
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 30,
+                          color: Colors.white)),
                 ),
-              )
+              ))
             ],
           ),
         )));
