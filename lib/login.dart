@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 class Verification extends StatefulWidget {
   const Verification({Key? key}) : super(key: key);
@@ -26,10 +27,24 @@ class _VerificationState extends State<Verification> {
               Center(
                 child: Text(
                   'Enter Your Phone Number',
-                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                    color: Theme.of(context).colorScheme.secondaryContainer),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Theme.of(context).colorScheme.secondaryContainer),
+                ),
+              ),
+              Center(
+                child: IntlPhoneField(
+                  decoration: InputDecoration(
+                    labelText: 'Phone Number',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                  initialCountryCode: 'IN',
+                  onChanged: (phone) {
+                    print(phone.completeNumber);
+                  },
                 ),
               )
             ],
