@@ -61,8 +61,8 @@ class _VerificationState extends State<Verification> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => OTPScreen(_controller.text)));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: ((context) => OTPScreen())));
                   },
                   child: const Text('Next',
                       style: TextStyle(
