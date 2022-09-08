@@ -9,16 +9,18 @@ class OTPScreen extends StatefulWidget {
   OTPScreen({required this.phone});
 
   @override
-  State<OTPScreen> createState() => _OTPScreenState();
+  State<OTPScreen> createState() => _OTPScreenState(phone);
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  late final String phone;
+  final String phone;
 
   final TextEditingController _pinOTPCodeController = TextEditingController();
   final FocusNode _pinOTPCodeFocus = FocusNode();
 
   String? verificationCode;
+
+  _OTPScreenState(this.phone);
 
   @override
   void initState() {
@@ -74,7 +76,7 @@ class _OTPScreenState extends State<OTPScreen> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: EdgeInsets.only(top: 80),
             child: Center(
               child: GestureDetector(
                 onTap: () {
