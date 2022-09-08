@@ -52,9 +52,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Pinput(
-      onCompleted: (pin) => print(pin),
-    );
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
 
