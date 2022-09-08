@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-
-import 'OTPScreen.dart';
+import 'package:klando/OTPScreen.dart';
 
 class Verification extends StatefulWidget {
   const Verification({Key? key}) : super(key: key);
@@ -17,7 +16,7 @@ class _VerificationState extends State<Verification> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 10),
           child: Column(
             children: [
               Center(
@@ -36,6 +35,8 @@ class _VerificationState extends State<Verification> {
                 ),
               ),
               Center(
+                  child: Padding(
+                padding: const EdgeInsets.only(top: 30),
                 child: IntlPhoneField(
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
@@ -43,12 +44,12 @@ class _VerificationState extends State<Verification> {
                       borderSide: BorderSide(),
                     ),
                   ),
-                  initialCountryCode: 'IN',
+                  initialCountryCode: 'CM',
                   onChanged: (phone) {
                     print(phone.completeNumber);
                   },
                 ),
-              ),
+              )),
               Center(
                   child: Padding(
                 padding: const EdgeInsets.only(top: 50, bottom: 40),
@@ -61,8 +62,10 @@ class _VerificationState extends State<Verification> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: ((context) => OTPScreen())));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => OTPScreen(
+                              phone: '',
+                            )));
                   },
                   child: const Text('Next',
                       style: TextStyle(
