@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:klando/HomeScreen.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -12,84 +13,108 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  Widget buildPinPut() {
-    final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 56,
-      textStyle: TextStyle(
-          fontSize: 20,
-          color: Color.fromRGBO(30, 60, 87, 1),
-          fontWeight: FontWeight.w600),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
+  late final String phone;
 
-    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
-      borderRadius: BorderRadius.circular(8),
-    );
+  final TextEditingController _pinOTPCodeController = TextEditingController();
+  final FocusNode _pinOTPCodeFocus = FocusNode();
 
-    final submittedPinTheme = defaultPinTheme.copyWith(
-      decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromRGBO(234, 239, 243, 1),
-      ),
-    );
+  String? verificationCode;
 
-    return Pinput(
-      defaultPinTheme: defaultPinTheme,
-      focusedPinTheme: focusedPinTheme,
-      submittedPinTheme: submittedPinTheme,
-      validator: (s) {
-        return s == '2222' ? null : 'Pin is incorrect';
+  @override
+  void initState() {
+    super.initState();
+
+    verifyPhoneNumber();
+  }
+
+  verifyPhoneNumber() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: "${phone}",
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await FirebaseAuth.instance
+            .signInWithCredential(credential)
+            .then((value) {
+          if (value.user != null) {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (c) => HomeScreen()));
+          }
+        });
       },
-      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-      showCursor: true,
-      onCompleted: (pin) => print(pin),
+      verificationFailed: (FirebaseAuthException e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(e.message.toString()),
+          duration: Duration(seconds: 3),
+        ));
+      },
+      codeSent: (String vID, int? resendToken) {
+        setState(() {
+          verificationCode = vID;
+        });
+      },
+      codeAutoRetrievalTimeout: (String vID) {
+        setState(() {
+          verificationCode = vID;
+        });
+      },
+      timeout: Duration(seconds: 60),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
-
-//phone number verification process method
-
-// ignore: unused_element
-class _delegate {
-  // ignore: unused_element
-  static Future<void> verifyPhoneNumber({
-    String? phoneNumber,
-    PhoneMultiFactorInfo? multiFactorInfo,
-    required PhoneVerificationCompleted verificationCompleted,
-    required PhoneVerificationFailed verificationFailed,
-    required PhoneCodeSent codeSent,
-    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-    @visibleForTesting String? autoRetrievedSmsCodeForTesting,
-    Duration timeout = const Duration(seconds: 60),
-    int? forceResendingToken,
-    MultiFactorSession? multiFactorSession,
-  }) {
-    assert(
-      phoneNumber != null || multiFactorInfo != null,
-      'Either phoneNumber or multiFactorInfo must be provided.',
-    );
-    return _delegate.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      multiFactorInfo: multiFactorInfo,
-      timeout: timeout,
-      forceResendingToken: forceResendingToken,
-      verificationCompleted: verificationCompleted,
-      verificationFailed: verificationFailed,
-      codeSent: codeSent,
-      codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-      // ignore: invalid_use_of_visible_for_testing_member
-      autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
-      multiFactorSession: multiFactorSession,
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Image.asset(
+              'assets/Cardrivingbro1.png',
+              width: 180,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  verifyPhoneNumber();
+                },
+                child: Text(
+                  "Verifying : ${phone}",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(40.0),
+            child: Pinput(
+                focusNode: _pinOTPCodeFocus,
+                controller: _pinOTPCodeController,
+                pinAnimationType: PinAnimationType.rotation,
+                onSubmitted: (pin) async {
+                  try {
+                    await FirebaseAuth.instance
+                        .signInWithCredential(PhoneAuthProvider.credential(
+                            verificationId: verificationCode!, smsCode: pin))
+                        .then((value) {
+                      if (value.user != null) {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (c) => HomeScreen()));
+                      }
+                    });
+                  } catch (e) {
+                    FocusScope.of(context).unfocus();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Invalid  OTP"),
+                      duration: Duration(seconds: 3),
+                    ));
+                  }
+                }),
+          )
+        ],
+      ),
     );
   }
 }

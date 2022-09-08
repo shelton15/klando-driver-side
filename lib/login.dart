@@ -3,7 +3,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:klando/OTPScreen.dart';
 
 class Verification extends StatefulWidget {
-  const Verification({Key? key}) : super(key: key);
+  Verification({Key? key}) : super(key: key);
 
   @override
   _VerificationState createState() => _VerificationState();
@@ -63,7 +63,7 @@ class _VerificationState extends State<Verification> {
                   ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => OTPScreen(
+                        builder: (c) => OTPScreen(
                               phone: '',
                             )));
                   },

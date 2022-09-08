@@ -54,8 +54,8 @@ class _GetStartedState extends State<GetStarted> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50))),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const Verification()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => Verification()));
               },
               child: const Text(
                 'Get Started',
