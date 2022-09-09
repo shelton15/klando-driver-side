@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:klando/OTPScreen.dart';
 
 class Verification extends StatefulWidget {
@@ -11,6 +10,7 @@ class Verification extends StatefulWidget {
 }
 
 class _VerificationState extends State<Verification> {
+  TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +49,7 @@ class _VerificationState extends State<Verification> {
                   onChanged: (phone) {
                     print(phone.completeNumber);
                   },
+                  controller: _controller,
                 ),
               )),
               Center(
@@ -64,8 +65,8 @@ class _VerificationState extends State<Verification> {
                   ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => OTPScreen(
-                              phone: '',
+                        builder: (context) => OTPScreen(
+                              phoneNum: '',
                             )));
                   },
                   child: const Text('Next',

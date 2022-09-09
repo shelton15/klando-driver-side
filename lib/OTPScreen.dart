@@ -1,122 +1,198 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:klando/HomeScreen.dart';
-import 'package:pinput/pinput.dart';
+
+import 'package:provider/provider.dart';
 
 class OTPScreen extends StatefulWidget {
-  final String phone;
-
-  OTPScreen({required this.phone});
+  const OTPScreen({Key? key, required this.phoneNum}) : super(key: key);
+  final String phoneNum;
 
   @override
-  State<OTPScreen> createState() => _OTPScreenState(phone);
+  _OTPScreenState createState() => _OTPScreenState();
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  final String phone;
-
-  final TextEditingController _pinOTPCodeController = TextEditingController();
-  final FocusNode _pinOTPCodeFocus = FocusNode();
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _pinController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   String? verificationCode;
 
-  _OTPScreenState(this.phone);
+  final pinDecoration = BoxDecoration(
+    color: Colors.white,
+    boxShadow: const [
+      BoxShadow(offset: Offset(0, 0.1), color: Colors.green, blurRadius: 4)
+    ],
+    borderRadius: BorderRadius.circular(10.0),
+  );
 
   @override
   void initState() {
     super.initState();
-
-    verifyPhoneNumber();
+    signin(widget.phoneNum, context, _pinController.text);
   }
 
-  verifyPhoneNumber() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: "${phone}",
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await FirebaseAuth.instance
-            .signInWithCredential(credential)
-            .then((value) {
-          if (value.user != null) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (c) => HomeScreen()));
-          }
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.message.toString()),
-          duration: Duration(seconds: 3),
-        ));
-      },
-      codeSent: (String vID, int? resendToken) {
-        setState(() {
-          verificationCode = vID;
-        });
-      },
-      codeAutoRetrievalTimeout: (String vID) {
-        setState(() {
-          verificationCode = vID;
-        });
-      },
-      timeout: Duration(seconds: 60),
-    );
+  void verifyPhoneNumber() async {
+    var provider = Provider.of<Authentication>(context, listen: false);
+    provider.signin(widget.phoneNum, context);
   }
+
+  var pin;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: Image.asset(
-              'assets/Cardrivingbro1.png',
-              width: 180,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 80),
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  verifyPhoneNumber();
-                },
-                child: Text(
-                  "Verifying : ${phone}",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Verification'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    verifyPhoneNumber();
+                  },
+                  child: Text('Verifying : ${widget.phoneNum}'),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(40.0),
-            child: Pinput(
-                focusNode: _pinOTPCodeFocus,
-                controller: _pinOTPCodeController,
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: PinPut(
+                fieldsCount: 6,
+                eachFieldHeight: 55.0,
+                eachFieldWidth: 40.0,
+                focusNode: _focusNode,
+                controller: _pinController,
+                submittedFieldDecoration: pinDecoration,
+                selectedFieldDecoration: pinDecoration,
+                followingFieldDecoration: pinDecoration,
                 pinAnimationType: PinAnimationType.rotation,
-                onSubmitted: (pin) async {
+                onSubmit: (pin) async {
+                  try {
+                    print(pin);
+                    //signin(widget.phoneNum, context, pin);
+                  } on FirebaseAuthException catch (e) {
+                    FocusScope.of(context).unfocus();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+            BotButton(
+                onTap: () async {
+                  print(_pinController.text);
                   try {
                     await FirebaseAuth.instance
                         .signInWithCredential(PhoneAuthProvider.credential(
-                            verificationId: verificationCode!, smsCode: pin))
-                        .then((value) {
-                      if (value.user != null) {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (c) => HomeScreen()));
-                      }
+                            verificationId: verificationCode!,
+                            smsCode: _pinController.text))
+                        .then((value) async {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .where('id', isEqualTo: value.user!.uid)
+                          .get()
+                          .then((result) {
+                        if (result.docs.isEmpty) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CompleteSignUp(),
+                              ),
+                              (route) => false);
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomePage(),
+                              ),
+                              (route) => false);
+                        }
+                      });
                     });
-                  } catch (e) {
+                  } on FirebaseAuthException catch (e) {
                     FocusScope.of(context).unfocus();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Invalid  OTP"),
-                      duration: Duration(seconds: 3),
-                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
                   }
-                }),
-          )
-        ],
+                },
+                title: 'Go')
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> signin(
+      String phoneNum, BuildContext context, String smsCode) async {
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phoneNum,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await FirebaseAuth.instance
+              .signInWithCredential(credential)
+              .then((value) async {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .where('id', isEqualTo: value.user!.uid)
+                .get()
+                .then((result) {
+              if (result.docs.isEmpty) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CompleteSignUp(),
+                    ),
+                    (route) => false);
+              } else {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
+                    (route) => false);
+              }
+            });
+          });
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.message.toString()),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        },
+        codeSent: (String vID, int? resendToken) {
+          setState(() {
+            verificationCode = vID;
+          });
+          PhoneAuthCredential cred = PhoneAuthProvider.credential(
+              verificationId: vID, smsCode: smsCode);
+          FirebaseAuth.instance.signInWithCredential(cred);
+        },
+        codeAutoRetrievalTimeout: (String vID) {
+          verificationCode = vID;
+        },
+        timeout: const Duration(seconds: 60),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+    }
   }
 }
