@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:klando/OTPScreen.dart';
@@ -10,7 +11,10 @@ class Verification extends StatefulWidget {
 }
 
 class _VerificationState extends State<Verification> {
-  TextEditingController _controller = TextEditingController();
+  late String verID;
+  late String phone;
+  bool codeSent = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,19 +42,26 @@ class _VerificationState extends State<Verification> {
               Center(
                   child: Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: IntlPhoneField(
-                  decoration: InputDecoration(
-                    labelText: 'Phone Number',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                  ),
-                  initialCountryCode: 'CM',
-                  onChanged: (phone) {
-                    print(phone.completeNumber);
-                  },
-                  controller: _controller,
-                ),
+                child: codeSent
+                    ? OTPScreen(
+                        onCompleted: (pin) {
+                          verifyPin(pin);
+                        },
+                      )
+                    : IntlPhoneField(
+                        decoration: InputDecoration(
+                          labelText: 'Phone Number',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(),
+                          ),
+                        ),
+                        initialCountryCode: 'CM',
+                        onChanged: (phoneNumber) {
+                          setState(() {
+                            phone = phoneNumber.completeNumber;
+                          });
+                        },
+                      ),
               )),
               Center(
                   child: Padding(
@@ -64,10 +75,7 @@ class _VerificationState extends State<Verification> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => OTPScreen(
-                              phoneNum: '',
-                            )));
+                    verifyPhone();
                   },
                   child: const Text('Next',
                       style: TextStyle(
@@ -79,5 +87,45 @@ class _VerificationState extends State<Verification> {
             ],
           ),
         )));
+  }
+
+  Future<void> verifyPhone() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await FirebaseAuth.instance.signInWithCredential(credential);
+          final snackBar = SnackBar(content: Text("Login Suceess"));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          final snackBar = SnackBar(content: Text("${e.message}"));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        },
+        codeSent: (String verficationid, int resendToken) {
+          setState(() {
+            codeSent = true;
+            verID = verficationid;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationID) {
+          setState(() {
+            verID = verificationID;
+          });
+        },
+        timeout: Duration(seconds: 60));
+  }
+
+  Future<void> verifyPin(pin) async {
+    PhoneAuthCredential credential =
+        PhoneAuthProvider.credential(verificationId: verID, smsCode: pin);
+
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      final snackBar = SnackBar(content: Text("Login Suceess"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on FirebaseAuthException catch (e) {
+      final snackBar = SnackBar(content: Text("${e.message}"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
