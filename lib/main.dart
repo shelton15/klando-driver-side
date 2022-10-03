@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'lottiescreen.dart';
+import 'screens/lottiescreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

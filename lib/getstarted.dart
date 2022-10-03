@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:klando/login.dart';
+import 'package:klando/screens/auth_screen.dart';
 
 class GetStarted extends StatefulWidget {
   const GetStarted({Key? key}) : super(key: key);
@@ -55,7 +55,7 @@ class _GetStartedState extends State<GetStarted> {
                       borderRadius: BorderRadius.circular(50))),
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => Verification()));
+                    MaterialPageRoute(builder: (context) => AuthScreen()));
               },
               child: const Text(
                 'Get Started',
