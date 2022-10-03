@@ -38,7 +38,7 @@ class _OTPScreenState extends State<OTPScreen> {
           final snackBar = SnackBar(content: Text("${e.message}"));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         },
-        codeSent: (String verficationid, int resendToken) {
+        codeSent: (String verficationid, int? resendToken) {
           setState(() {
             codeSent = true;
             verID = verficationid;
