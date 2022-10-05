@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:klando/screens/auth_screen.dart';
+import 'package:klando/screens/phone_field.dart';
 
 class GetStarted extends StatefulWidget {
   const GetStarted({Key? key}) : super(key: key);
@@ -55,7 +55,7 @@ class _GetStartedState extends State<GetStarted> {
                       borderRadius: BorderRadius.circular(50))),
               onPressed: () {
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => AuthScreen()));
+                    MaterialPageRoute(builder: (context) => PhoneField()));
               },
               child: const Text(
                 'Get Started',
