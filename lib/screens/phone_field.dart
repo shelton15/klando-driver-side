@@ -11,6 +11,20 @@ class PhoneField extends StatefulWidget {
 class _PhoneFieldState extends State<PhoneField> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return MaterialApp(
+      home: SafeArea(
+          top: true,
+          child: Scaffold(
+            body: Column(
+              children: [
+                Center(
+                    child: Padding(
+                  padding: const EdgeInsets.only(top: 100, bottom: 10),
+                  child: Image.asset('assets/Cardrivingvro1.png'),
+                ))
+              ],
+            ),
+          )),
+    );
   }
 }
