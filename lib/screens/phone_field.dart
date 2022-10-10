@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field_improve/countries.dart';
 import 'package:intl_phone_field_improve/intl_phone_field.dart';
 import 'package:intl_phone_field_improve/phone_number.dart';
+import 'package:klando/screens/verify_screen.dart';
 
 class PhoneField extends StatefulWidget {
   const PhoneField({Key? key}) : super(key: key);
@@ -21,8 +22,8 @@ class _PhoneFieldState extends State<PhoneField> {
             children: [
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 5, bottom: 10, left: 60, right: 60),
+                padding:
+                    const EdgeInsets.only(bottom: 10, left: 100, right: 100),
                 child: Image.asset('assets/Cardrivingbro1.png'),
               )),
               Center(
@@ -48,6 +49,27 @@ class _PhoneFieldState extends State<PhoneField> {
                     onChanged: (phone) {
                       print(phone.completeNumber);
                     },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      fixedSize: const Size(170, 80),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50))),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => OTPScreen()));
+                  },
+                  child: const Text(
+                    'Send OTP',
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 20,
+                        color: Colors.white),
                   ),
                 ),
               )
