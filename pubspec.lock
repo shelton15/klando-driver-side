@@ -233,13 +233,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  intl_phone_field_plus:
-    dependency: "direct main"
-    description:
-      name: intl_phone_field_plus
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
   js:
     dependency: transitive
     description:

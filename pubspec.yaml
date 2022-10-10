@@ -40,7 +40,6 @@ dependencies:
   firebase_core: ^1.12.0
   fluttertoast: ^8.0.8
   pinput: ^2.2.12
-  intl_phone_field_plus: ^2.1.2
   intl_phone_field_improve: ^1.0.1
   pin_entry_text_field: ^0.1.4
   firebase_phone_auth_handler: ^1.0.6
