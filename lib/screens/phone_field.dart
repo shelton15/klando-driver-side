@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:intl_phone_field/intl_phone_field.dart';
+
 class PhoneField extends StatefulWidget {
   const PhoneField({Key? key}) : super(key: key);
 
@@ -17,7 +19,8 @@ class _PhoneFieldState extends State<PhoneField> {
             children: [
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                padding: const EdgeInsets.only(
+                    top: 5, bottom: 10, left: 60, right: 60),
                 child: Image.asset('assets/Cardrivingbro1.png'),
               )),
               Center(
@@ -27,6 +30,23 @@ class _PhoneFieldState extends State<PhoneField> {
                       fontWeight: FontWeight.bold,
                       fontSize: 25,
                       color: Theme.of(context).colorScheme.secondary),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: IntlPhoneField(
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(),
+                      ),
+                    ),
+                    initialCountryCode: 'CM',
+                    onChanged: (phone) {
+                      print(phone.completeNumber);
+                    },
+                  ),
                 ),
               )
             ],
