@@ -17,15 +17,15 @@ class _PhoneFieldState extends State<PhoneField> {
             children: [
               Center(
                   child: Padding(
-                padding: const EdgeInsets.only(top: 100, bottom: 10),
-                child: Image.asset('assets/Cardrivingvro1.png'),
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: Image.asset('assets/Cardrivingbro1.png'),
               )),
               Center(
                 child: Text(
                   'Enter Your Phone Number',
                   style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                       color: Theme.of(context).colorScheme.secondary),
                 ),
               )
