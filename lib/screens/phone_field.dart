@@ -59,7 +59,7 @@ class _PhoneFieldState extends State<PhoneField> {
                       backgroundColor: Colors.green,
                       fixedSize: const Size(170, 80),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50))),
+                          borderRadius: BorderRadius.circular(100))),
                   onPressed: () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) => OTPScreen()));
